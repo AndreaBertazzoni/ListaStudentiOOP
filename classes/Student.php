@@ -30,9 +30,18 @@ class Student {
         return $this->firstName . " " . $this->lastName;
     }
 
-    public function subscribeToCourse(int $courseId): void{
-        if (!in_array($courseId, $this->subscriptions)){
-            $this->subscriptions[] = $courseId;
+    public function subscribeToCourse(Course $course): void{
+        foreach($this->subscriptions as $existingCourse){
+            if($existingCourse->getId() === $course->getId()){
+                return;
+            }
+        }
+        $this->subscriptions[] = $course;
+    }
+
+    public function subscribeToCourses(Course ...$courses): void {
+        foreach ($courses as $course) {
+            $this->subscribeToCourse($course);
         }
     }
 
@@ -42,5 +51,11 @@ class Student {
 
     public function isSubscribedToCourse(int $courseID): bool{
         return in_array($courseID, $this->subscriptions);
+    }
+
+    public function getSubscriptionsInfo(): void{
+        foreach ($this->subscriptions as $course){
+            echo $course->getInfo();
+        }
     }
 }
