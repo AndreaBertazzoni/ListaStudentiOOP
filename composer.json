@@ -1,0 +1,17 @@
+{
+    "name": "abert/lista-studenti-oop",
+    "autoload": {
+        "psr-4": {
+            "Abert\\ListaStudentiOop\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "AndreaBertazzoni",
+            "email": "abertazzoni11@gmail.com"
+        }
+    ],
+    "require": {
+        "nesbot/carbon": "^3.10"
+    }
+}
