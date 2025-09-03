@@ -61,6 +61,10 @@ class Course {
         }
     }
 
+    public function getLessons(): array{
+        return $this->lessons;
+    }
+
     public function getInfo(): string{
         return "Titolo corso: " . $this->getName() . "<br>" . 
         "Data inizio: " . $this->getStartDate()->format("d/m/Y") . "<br>" . 

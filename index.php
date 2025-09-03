@@ -25,8 +25,8 @@ $lesson1002 = new Lesson(
     2,
     "Rinascimento",
     Carbon::parse("2025/09/03"),
-    Carbon::parse("2025/09/05 10:00"),
-    Carbon::parse("2025/09/05 12:00")
+    Carbon::parse("2025/09/03 10:00"),
+    Carbon::parse("2025/09/03 12:00")
 );
 
 $lesson1003 = new Lesson(
@@ -43,8 +43,8 @@ $lesson1004 = new Lesson(
     4,
     "Rinascimento",
     Carbon::parse("2025/09/07"),
-    Carbon::parse("2025/09/05 10:00"),
-    Carbon::parse("2025/09/05 12:00")
+    Carbon::parse("2025/09/07 10:00"),
+    Carbon::parse("2025/09/07 12:00")
 );
 
 $course101->addLessons($lesson1001, $lesson1002, $lesson1003, $lesson1004);
@@ -129,14 +129,47 @@ $lesson3004 = new Lesson(
 
 $course103->addLessons($lesson3001, $lesson3002, $lesson3003, $lesson3004);
 
-
 $student01->subscribeToCourses($course101, $course103);
 $student02->subscribeToCourses($course101, $course102, $course103);
 $student03->subscribeToCourses($course102);
 $student04->subscribeToCourses($course102, $course103);
 
+$attendances01 = [
+    $attendance1001 = new Attendance(
+        1001,
+        Carbon::parse("2025/09/01"),
+        Carbon::parse("2025/09/01 10:00"),
+        Carbon::parse("2025/09/01 12:00")
+    ),
+    $attendances1002 = new Attendance(
+        1002,
+        Carbon::parse("2025/09/03"),
+        Carbon::parse("2025/09/05 10:00"),
+        Carbon::parse("2025/09/05 12:00")
+    ),
+    $attendances1003 = new Attendance(
+        1003,
+        Carbon::parse("2025/09/05"),
+        Carbon::parse("2025/09/05 10:00"),
+        Carbon::parse("2025/09/05 12:00")
+    ),
+    $attendances1004 = new Attendance(
+        1004,
+        Carbon::parse("2025/09/07"),
+        Carbon::parse("2025/09/05 10:00"),
+        Carbon::parse("2025/09/05 12:00")
+    ),
+];
+
+foreach($attendances01 as $attendance){
+    $student01->addAttendance($attendance);
+}
+
 $courseManager = new CoursesManager();
 
 $courseManager->addCourses($course101, $course102, $course103);
+$courseManager->addStudents($student01);
+
+
 
 $courseManager->getCoursesInfo();
