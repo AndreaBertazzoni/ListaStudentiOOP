@@ -25,6 +25,10 @@ class CoursesManager
         $this->courses[] = $course;
     }
 
+    public function getCourses(): array{
+        return $this->courses;
+    }
+
     public function addCourses(Course ...$courses){
         foreach($courses as $course){
             $this->addCourse($course); 
@@ -41,20 +45,15 @@ class CoursesManager
         $this->students[] = $student;
     }
 
-    public function addStudents(Student ...$Students){
-        foreach($Students as $student){
+    public function addStudents(Student ...$students){
+        foreach($students as $student){
             $this->addStudent($student);
-        }
-    }   
-
-    // spostare in ReportGenerator
-    public function getCoursesInfo(): void
-    {
-        foreach ($this->courses as $course) {
-            echo $course->getInfo();
         }
     }
 
     
+    
+    
+   
     
 }

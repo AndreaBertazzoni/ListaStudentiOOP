@@ -31,6 +31,10 @@ class Course {
         }
     }
 
+        public function getLessons(): array{
+        return $this->lessons;
+    }
+
     public function getStartDate(): Carbon{
         $dates = [];
         foreach($this->lessons as $lesson){
@@ -59,10 +63,6 @@ class Course {
         }else {
             return "In corso"; 
         }
-    }
-
-    public function getLessons(): array{
-        return $this->lessons;
     }
 
     public function getInfo(): string{

@@ -144,8 +144,8 @@ $attendances01 = [
     $attendances1002 = new Attendance(
         1002,
         Carbon::parse("2025/09/03"),
-        Carbon::parse("2025/09/05 10:00"),
-        Carbon::parse("2025/09/05 12:00")
+        Carbon::parse("2025/09/03 10:00"),
+        Carbon::parse("2025/09/03 12:00")
     ),
     $attendances1003 = new Attendance(
         1003,
@@ -156,12 +156,12 @@ $attendances01 = [
     $attendances1004 = new Attendance(
         1004,
         Carbon::parse("2025/09/07"),
-        Carbon::parse("2025/09/05 10:00"),
-        Carbon::parse("2025/09/05 12:00")
+        Carbon::parse("2025/09/07 10:00"),
+        Carbon::parse("2025/09/07 12:00")
     ),
 ];
 
-foreach($attendances01 as $attendance){
+foreach ($attendances01 as $attendance) {
     $student01->addAttendance($attendance);
 }
 
@@ -170,6 +170,8 @@ $courseManager = new CoursesManager();
 $courseManager->addCourses($course101, $course102, $course103);
 $courseManager->addStudents($student01);
 
+$reportGenerator = new ReportGenerator($courseManager);
+
+$reportGenerator->displayCourseInfo($course101);
 
 
-$courseManager->getCoursesInfo();

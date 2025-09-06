@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 class Student
 {
     private int $id;
@@ -84,9 +86,27 @@ class Student
         $this->attendances[] = $attendance;
     }
 
-    public function getTpForLesson(int $lessonId)
-    {
+    public function getAttendanceEntryTime($lessonId): ?Carbon{
+        foreach($this->attendances as $attendance){
+            if($attendance->getLessonId() === $lessonId){
+                return $attendance->getEntryTime();
+            }
+        }
+        return null;
+    }
 
+    public function getAttendanceExitTime($lessonId): ?Carbon{
+        foreach($this->attendances as $attendance){
+            if($attendance->getLessonId() === $lessonId){
+                return $attendance->getExitTime();
+            }
+        }
+        return null;
+    }
+
+
+    public function getTpForLesson(int $lessonId): float
+    {
         $targetLesson = null;
         foreach ($this->subscriptions as $course) {
             foreach ($course->getLessons() as $lesson) {
@@ -99,43 +119,39 @@ class Student
 
         if (!$targetLesson) {
             return 0.0;
+        }
 
-
-            $attendance = null;
-            foreach ($this->attendances as $att) {
-                if ($att->getLessonId() === $lessonId) {
-                    $attendance = $att;
-                    break;
-                }
-            }
-
-            if (!$attendance) {
-                return 0.0;
-
-
-                $lessonStart = $targetLesson->getStartTime();
-                $lessonEnd = $targetLesson->getEndTime();
-                $totalLessonDuration = $lessonStart->diffInMinutes($lessonEnd);
-
-                $studentEntry = $attendance->getEntryTime();
-                $studentExit = $attendance->getExitTime();
-
-                $effectiveStart = $studentEntry->gt($lessonStart) ? $studentEntry : $lessonStart;
-
-                $effectiveEnd = $studentExit->lt($lessonEnd) ? $studentExit : $lessonEnd;
-
-                if ($effectiveStart->gte($effectiveEnd)) {
-                    return 0.0;
-                }
-
-                $attendanceDuration = $effectiveStart->diffInMinutes($effectiveEnd);
-
-                return $totalLessonDuration > 0 ?
-                    ($attendanceDuration / $totalLessonDuration) * 100 : 0.0;
+        $attendance = null;
+        foreach ($this->attendances as $att) {
+            if ($att->getLessonId() === $lessonId) {
+                $attendance = $att;
+                break;
             }
         }
-    }
 
+        if (!$attendance) {
+            return 0.0;
+        }
+
+        $lessonStart = $targetLesson->getStartTime();
+        $lessonEnd = $targetLesson->getEndTime();
+        $totalLessonDuration = $lessonStart->diffInMinutes($lessonEnd);
+
+        $studentEntry = $attendance->getEntryTime();
+        $studentExit = $attendance->getExitTime();
+
+        $effectiveStart = $studentEntry->gt($lessonStart) ? $studentEntry : $lessonStart;
+        $effectiveEnd = $studentExit->lt($lessonEnd) ? $studentExit : $lessonEnd;
+
+        if ($effectiveStart->gte($effectiveEnd)) {
+            return 0.0;
+        }
+
+        $attendanceDuration = $effectiveStart->diffInMinutes($effectiveEnd);
+
+        return $totalLessonDuration > 0 ?
+            ($attendanceDuration / $totalLessonDuration) * 100 : 0.0;
+    }
 
     public function getAverageTpForCourse(int $courseId): float
     {
@@ -151,4 +167,5 @@ class Student
 
         return count($lessons) > 0 ? $totalTp / count($lessons) : 0.0;
     }
+
 }
