@@ -64,12 +64,4 @@ class Course {
             return "In corso"; 
         }
     }
-
-    public function getInfo(): string{
-        return "Titolo corso: " . $this->getName() . "<br>" . 
-        "Data inizio: " . $this->getStartDate()->format("d/m/Y") . "<br>" . 
-        "Data fine: " . $this->getEndDate()->format("d/m/Y") . "<br>" .
-        "Stato: " . $this->getStatus() . "<br><br>";
-        
-    }
 }

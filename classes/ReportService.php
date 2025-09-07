@@ -20,7 +20,7 @@ class ReportService{
                 "lessons" => [],
                 "average_tp" => $student->getAverageTpForCourse($course->getId())
             ];
-        
+            
             $lessons = $course->getLessons();
             foreach($lessons as $lesson){
                 $studentEntry = $student->getAttendanceEntryTime($lesson->getId());
@@ -37,13 +37,10 @@ class ReportService{
                     "student_tp" => $student->getTpForLesson($lesson->getId())
                 ];
             }
-            
         $studentReportData["courses"][] = $courseData;
-
         }
         return $studentReportData;
     }
-
 
     public function collectCourseReportData(Course $course): array {
         $courseReportData = [
@@ -54,5 +51,13 @@ class ReportService{
         ];
         return $courseReportData;
     }  
+
+    public function collectCoursesReportData(array $courses): array {
+        $coursesReportData = [];
+        foreach($courses as $course){
+            $coursesReportData[] = $this->collectCourseReportData($course);
+        }
+        return $coursesReportData;
+    }
     
 }

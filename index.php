@@ -4,7 +4,7 @@ require_once "autoloader.php";
 
 use Carbon\Carbon;
 
-$student01 = new Student(01, "Andrea", "Bertazzoni");
+$student01 = new Student(01, "Andrea", "Rossi");
 $student02 = new Student(02, "Federico", "Verdi");
 $student03 = new Student(03, "Alessandro", "Bianchi");
 $student04 = new Student(04, "Giacomo", "Leopardi");
@@ -172,6 +172,5 @@ $courseManager->addStudents($student01);
 
 $reportGenerator = new ReportGenerator($courseManager);
 
-$reportGenerator->displayCourseInfo($course101);
-
-
+$reportGenerator->displayCoursesInfo($courseManager->getCourses());
+$reportGenerator->displayStudentInfo($student01);

@@ -51,6 +51,10 @@ class CoursesManager
         }
     }
 
+    public function getStudents(): array {
+        return $this->students;
+    }
+
     
     
     
