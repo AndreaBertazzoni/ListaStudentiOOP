@@ -13,7 +13,7 @@ class HtmlReportRenderer
         $html .= "Orario di uscita: " . $lessonData["end_time"] . "<br>";
         $html .= "Entrata studente: " . ($lessonData["student_entry"] ?: "assente") . "<br>";
         $html .= "Uscita studente: " . ($lessonData["student_exit"] ?: "assente") . "<br>";
-        $html .= "Tasso di partecipazione: " . $lessonData["student_tp"] . "%<br>";
+        $html .= "Tasso di partecipazione: " . number_format($lessonData["student_tp"], 1, ",") . "%<br>";
         $html .= "<br>";
 
         return $html;
@@ -36,7 +36,7 @@ class HtmlReportRenderer
         foreach ($coursesData as $courseData) {
             $html .= $this->renderCourse($courseData);
         }
-        return $html;
+        return $html . "<hr>";
     }
 
     public function renderStudent(array $studentReportData): string
@@ -47,8 +47,28 @@ class HtmlReportRenderer
             foreach ($course["lessons"] as $lesson) {
                 $html .= $this->renderLesson($lesson);
             }
-            $html .= "<p><strong>Tasso di partecipazione medio: " . $course["average_tp"] . "%</strong></p><br>";
+            $html .= "<p><strong>Tasso di partecipazione medio: " . number_format($course["average_tp"], 1, ",") . "%</strong></p><br>";
         }
+        return $html . "<hr>";
+    }
+
+    public function renderStudents(array $studentsData): string {
+        $html = "";
+        foreach($studentsData as $studentData){
+            $html .= $this->renderStudent($studentData);
+        }
+        return $html;
+    }
+
+    public function renderStudentCourseReport(array $studentCourseData): string {
+        $html = "<p style='font-size: 120%;'><strong>Studente: " . $studentCourseData["student_name"] . "</strong></p>";
+        foreach($studentCourseData["courses"] as $course){
+            $html .= "<strong>Titolo corso: " . $course["course_name"] . "</strong><br>";
+            $html .= "Numero lezioni :" . $course["lesson_number"] . "<br>";
+            $html .= "Presente a tutte le lezioni: " . ($course["always_present"] ? "Si" : "No") . "<br>";
+            $html .= "Tasso di partecipazione medio al corso: " . number_format($course["course_tp"], 1, ",") . "%<br><br>";
+        }
+        $html .= "<strong>Tasso di partecipazione totale: " . number_format($studentCourseData["average_tp"], 1, ",") . "%</strong><hr>";
         return $html;
     }
 }

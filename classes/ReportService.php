@@ -18,7 +18,7 @@ class ReportService{
             $courseData = [
                 "course_name" => $course->getName(),
                 "lessons" => [],
-                "average_tp" => $student->getAverageTpForCourse($course->getId())
+                "average_tp" => round($student->getAverageTpForCourse($course->getId()), 1)
             ];
             
             $lessons = $course->getLessons();
@@ -34,13 +34,44 @@ class ReportService{
                     "end_time" => $lesson->getEndTime()->format("H:i"),
                     "student_entry" => $studentEntry ? $studentEntry->format("H:i") : null,
                     "student_exit" => $studentExit ? $studentExit->format("H:i") : null,
-                    "student_tp" => $student->getTpForLesson($lesson->getId())
+                    "student_tp" => round($student->getTpForLesson($lesson->getId()), 1)
                 ];
             }
         $studentReportData["courses"][] = $courseData;
         }
         return $studentReportData;
     }
+
+    public function collectStudentsReportData(array $students): array {
+        $studentsReportData = [];
+        foreach($students as $student){
+            $studentsReportData[] = $this->collectStudentReportData($student);
+        }
+        return $studentsReportData;
+    }
+
+    public function collectStudentCourseData(Student $student): array{
+        $studentCourseData = [
+            "student_name" => $student->getFullName(),
+            "courses" => [],
+            "average_tp" => round($student->getAverageTpForCourses($student->getSubscriptions()), 1),
+        ];
+        
+
+        $courses = $student->getSubscriptions();
+        foreach($courses as $course){
+            $courseData = [
+                "course_name" => $course->getName(),
+                "lesson_number" => count($course->getLessons()),
+                "student_presence" => $student->getAttendancesForCourse($course->getId()),
+                "always_present" => $student->isAlwaysPresent($course->getId()),
+                "course_tp" => round($student->getAverageTpForCourse($course->getId()), 1),
+            ];
+            $studentCourseData["courses"][] = $courseData;
+        }
+        return $studentCourseData;
+    }
+    
 
     public function collectCourseReportData(Course $course): array {
         $courseReportData = [

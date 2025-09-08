@@ -134,26 +134,26 @@ $student02->subscribeToCourses($course101, $course102, $course103);
 $student03->subscribeToCourses($course102);
 $student04->subscribeToCourses($course102, $course103);
 
-$attendances01 = [
-    $attendance1001 = new Attendance(
+$attendances01_course101 = [
+    new Attendance(
         1001,
         Carbon::parse("2025/09/01"),
         Carbon::parse("2025/09/01 10:00"),
         Carbon::parse("2025/09/01 12:00")
     ),
-    $attendances1002 = new Attendance(
+    new Attendance(
         1002,
         Carbon::parse("2025/09/03"),
         Carbon::parse("2025/09/03 10:00"),
         Carbon::parse("2025/09/03 12:00")
     ),
-    $attendances1003 = new Attendance(
+    new Attendance(
         1003,
         Carbon::parse("2025/09/05"),
         Carbon::parse("2025/09/05 10:00"),
         Carbon::parse("2025/09/05 12:00")
     ),
-    $attendances1004 = new Attendance(
+    new Attendance(
         1004,
         Carbon::parse("2025/09/07"),
         Carbon::parse("2025/09/07 10:00"),
@@ -161,16 +161,206 @@ $attendances01 = [
     ),
 ];
 
-foreach ($attendances01 as $attendance) {
+// Corso 103 - Matematica
+$attendances01_course103 = [
+    new Attendance(
+        3001,
+        Carbon::parse("2025/08/10"),
+        Carbon::parse("2025/08/10 15:00"),
+        Carbon::parse("2025/08/10 17:00")
+    ),
+    new Attendance(
+        3002,
+        Carbon::parse("2025/08/12"),
+        Carbon::parse("2025/08/12 15:00"),
+        Carbon::parse("2025/08/12 17:00")
+    ),
+    new Attendance(
+        3003,
+        Carbon::parse("2025/08/14"),
+        Carbon::parse("2025/08/14 15:00"),
+        Carbon::parse("2025/08/14 17:00")
+    ),
+    new Attendance(
+        3004,
+        Carbon::parse("2025/08/16"),
+        Carbon::parse("2025/08/16 15:00"),
+        Carbon::parse("2025/08/16 17:00")
+    ),
+];
+
+foreach (array_merge($attendances01_course101, $attendances01_course103) as $attendance) {
     $student01->addAttendance($attendance);
 }
 
+// ATTENDANCES STUDENTE 02 - Federico Verdi (con variazioni)
+// Corso 101 - Storia dell'Arte (arriva in ritardo prima lezione, esce prima ultima)
+$attendances02_course101 = [
+    new Attendance(
+        1001,
+        Carbon::parse("2025/09/01"),
+        Carbon::parse("2025/09/01 10:15"), // 15 min di ritardo
+        Carbon::parse("2025/09/01 12:00")
+    ),
+    new Attendance(
+        1002,
+        Carbon::parse("2025/09/03"),
+        Carbon::parse("2025/09/03 10:00"),
+        Carbon::parse("2025/09/03 12:00")
+    ),
+    new Attendance(
+        1003,
+        Carbon::parse("2025/09/05"),
+        Carbon::parse("2025/09/05 10:00"),
+        Carbon::parse("2025/09/05 12:00")
+    ),
+    new Attendance(
+        1004,
+        Carbon::parse("2025/09/07"),
+        Carbon::parse("2025/09/07 10:00"),
+        Carbon::parse("2025/09/07 11:30") // Esce 30 min prima
+    ),
+];
+
+// Corso 102 - Programmazione PHP (salta una lezione)
+$attendances02_course102 = [
+    new Attendance(
+        2001,
+        Carbon::parse("2025/09/10"),
+        Carbon::parse("2025/09/10 15:00"),
+        Carbon::parse("2025/09/10 17:00")
+    ),
+    // Salta lezione 2002
+    new Attendance(
+        2003,
+        Carbon::parse("2025/09/14"),
+        Carbon::parse("2025/09/14 15:10"), // 10 min di ritardo
+        Carbon::parse("2025/09/14 17:00")
+    ),
+    new Attendance(
+        2004,
+        Carbon::parse("2025/09/16"),
+        Carbon::parse("2025/09/16 15:00"),
+        Carbon::parse("2025/09/16 17:00")
+    ),
+];
+
+// Corso 103 - Matematica (presenze buone)
+$attendances02_course103 = [
+    new Attendance(
+        3001,
+        Carbon::parse("2025/08/10"),
+        Carbon::parse("2025/08/10 15:00"),
+        Carbon::parse("2025/08/10 17:00")
+    ),
+    new Attendance(
+        3002,
+        Carbon::parse("2025/08/12"),
+        Carbon::parse("2025/08/12 15:05"), // 5 min di ritardo
+        Carbon::parse("2025/08/12 17:00")
+    ),
+    new Attendance(
+        3003,
+        Carbon::parse("2025/08/14"),
+        Carbon::parse("2025/08/14 15:00"),
+        Carbon::parse("2025/08/14 17:00")
+    ),
+    new Attendance(
+        3004,
+        Carbon::parse("2025/08/16"),
+        Carbon::parse("2025/08/16 15:00"),
+        Carbon::parse("2025/08/16 16:45") // Esce 15 min prima
+    ),
+];
+
+foreach (array_merge($attendances02_course101, $attendances02_course102, $attendances02_course103) as $attendance) {
+    $student02->addAttendance($attendance);
+}
+
+// ATTENDANCES STUDENTE 03 - Alessandro Bianchi (solo corso 102, presenze irregolari)
+$attendances03_course102 = [
+    new Attendance(
+        2001,
+        Carbon::parse("2025/09/10"),
+        Carbon::parse("2025/09/10 15:20"), // 20 min di ritardo
+        Carbon::parse("2025/09/10 17:00")
+    ),
+    new Attendance(
+        2002,
+        Carbon::parse("2025/09/12"),
+        Carbon::parse("2025/09/12 15:00"),
+        Carbon::parse("2025/09/12 16:30") // Esce 30 min prima
+    ),
+    // Salta lezione 2003
+    new Attendance(
+        2004,
+        Carbon::parse("2025/09/16"),
+        Carbon::parse("2025/09/16 15:00"),
+        Carbon::parse("2025/09/16 17:00")
+    ),
+];
+
+foreach ($attendances03_course102 as $attendance) {
+    $student03->addAttendance($attendance);
+}
+
+// ATTENDANCES STUDENTE 04 - Giacomo Leopardi (corsi 102 e 103, presenze mediocri)
+// Corso 102 - Programmazione PHP
+$attendances04_course102 = [
+    // Salta prima lezione
+    new Attendance(
+        2002,
+        Carbon::parse("2025/09/12"),
+        Carbon::parse("2025/09/12 15:30"), // 30 min di ritardo
+        Carbon::parse("2025/09/12 17:00")
+    ),
+    new Attendance(
+        2003,
+        Carbon::parse("2025/09/14"),
+        Carbon::parse("2025/09/14 15:00"),
+        Carbon::parse("2025/09/14 16:45") // Esce 15 min prima
+    ),
+    new Attendance(
+        2004,
+        Carbon::parse("2025/09/16"),
+        Carbon::parse("2025/09/16 15:15"), // 15 min di ritardo
+        Carbon::parse("2025/09/16 17:00")
+    ),
+];
+
+// Corso 103 - Matematica
+$attendances04_course103 = [
+    new Attendance(
+        3001,
+        Carbon::parse("2025/08/10"),
+        Carbon::parse("2025/08/10 15:00"),
+        Carbon::parse("2025/08/10 17:00")
+    ),
+    // Salta lezione 3002
+    new Attendance(
+        3003,
+        Carbon::parse("2025/08/14"),
+        Carbon::parse("2025/08/14 15:25"), // 25 min di ritardo
+        Carbon::parse("2025/08/14 17:00")
+    ),
+    new Attendance(
+        3004,
+        Carbon::parse("2025/08/16"),
+        Carbon::parse("2025/08/16 15:00"),
+        Carbon::parse("2025/08/16 16:50") // Esce 10 min prima
+    ),
+];
+
+foreach (array_merge($attendances04_course102, $attendances04_course103) as $attendance) {
+    $student04->addAttendance($attendance);
+}
 $courseManager = new CoursesManager();
 
 $courseManager->addCourses($course101, $course102, $course103);
-$courseManager->addStudents($student01);
+$courseManager->addStudents($student01, $student02, $student03, $student04);
 
 $reportGenerator = new ReportGenerator($courseManager);
 
 $reportGenerator->displayCoursesInfo($courseManager->getCourses());
-$reportGenerator->displayStudentInfo($student01);
+$reportGenerator->displayStudentsInfo($courseManager->getStudents());
+$reportGenerator->displayStudentCourseInfo($student02);

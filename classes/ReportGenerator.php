@@ -24,4 +24,14 @@ class ReportGenerator{
         echo $this->htmlReportRenderer->renderStudent($reportData);
     }
 
+    public function displayStudentsInfo(array $students): void {
+        $reportData = $this->reportService->collectStudentsReportData($students);
+        echo $this->htmlReportRenderer->renderStudents($reportData);
+    }
+
+    public function displayStudentCourseInfo(Student $student): void {
+        $reportData = $this->reportService->collectStudentCourseData($student);
+        echo $this->htmlReportRenderer->renderStudentCourseReport($reportData);
+    }
+
 }

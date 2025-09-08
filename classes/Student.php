@@ -167,5 +167,40 @@ class Student
 
         return count($lessons) > 0 ? $totalTp / count($lessons) : 0.0;
     }
+    public function getAverageTpForCourses(array $courses): float {
+        $totalTp = 0;
+        foreach($courses as $course){
+            $totalTp += $this->getAverageTpForCourse($course->getId());
+        }
+        return $totalTp / count($courses);
+    }
+
+    public function getAttendancesForCourse (int $courseId): ?int {
+        $course = $this->getCourseById($courseId);
+        if (!$course){
+            return 0;
+        }
+        $lessons = $course->getLessons();
+        $presence = 0;
+        foreach($lessons as $lesson){
+            if($this->getTpForLesson($lesson->getId())){
+                $presence += 1;
+            }
+        }
+        return $presence;
+    }
+
+    public function isAlwaysPresent(int $courseId): bool {
+        $course = $this->getCourseById($courseId);
+        if (!$course){
+            return false;
+        }
+        $totalLessons = count($course->getLessons());
+        $studentPresence = $this->getAttendancesForCourse($course->getId());
+        if($totalLessons === $studentPresence){
+            return true;
+        }
+        return false;
+    }
 
 }
