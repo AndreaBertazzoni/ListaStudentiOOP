@@ -71,4 +71,12 @@ class HtmlReportRenderer
         $html .= "<strong>Tasso di partecipazione totale: " . number_format($studentCourseData["average_tp"], 1, ",") . "%</strong><hr>";
         return $html;
     }
+
+    public function renderStudentsCoursesReport(array $studentsCoursesData): string {
+        $html = "";
+        foreach($studentsCoursesData as $studentCourseData){
+            $html .= $this->renderStudentCourseReport($studentCourseData);
+        }
+        return $html;
+    }
 }

@@ -72,6 +72,13 @@ class ReportService{
         return $studentCourseData;
     }
     
+    public function collectStudentsCoursesData(array $students): array {
+        $studentdsCoursesData = [];
+        foreach($students as $student){
+            $studentdsCoursesData[] = $this->collectStudentCourseData($student);
+        }
+        return $studentdsCoursesData;
+    }
 
     public function collectCourseReportData(Course $course): array {
         $courseReportData = [
