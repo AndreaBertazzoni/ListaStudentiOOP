@@ -5,11 +5,14 @@ use Carbon\Carbon;
 class Course {
     private int $id;
     private string $name;
-    private array $lessons = [];
+    private array $lessons;
+    private int $enrolled;
 
     public function __construct($id, $name){
         $this->id = $id;
         $this->name = $name;
+        $this->lessons = [];
+        $this->enrolled = 0;
     }
     
     public function getId() : int {
@@ -35,6 +38,16 @@ class Course {
         return $this->lessons;
     }
 
+    public function addEnrolled(): void 
+    {
+        $this->enrolled ++;
+    }
+
+    public function getEnrolled(): int 
+    {
+        return $this->enrolled;
+    }
+
     public function getStartDate(): Carbon{
         $dates = [];
         foreach($this->lessons as $lesson){
@@ -51,7 +64,8 @@ class Course {
         return max($dates);
     }
 
-    public function getStatus(): string{
+    public function getStatus(): string
+    {
         $now = Carbon::now();
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
@@ -63,5 +77,28 @@ class Course {
         }else {
             return "In corso"; 
         }
+    }
+
+    public function getMaxAttendance(): int 
+    {
+        $result = 0;
+        foreach($this->lessons as $lesson){
+            if($lesson->getAttendances() > $result){
+                $result = $lesson->getAttendances();
+            }
+        }
+        return $result;
+    }
+
+    public function getMostAttendedLessons(): array 
+    {
+        $target = $this->getMaxAttendance();
+        $mostAttendedLessons = [];
+        foreach($this->lessons as $lesson){
+            if($lesson->getAttendances() >= $target){
+                $mostAttendedLessons[] = $lesson;
+            }
+        }
+        return $mostAttendedLessons;
     }
 }

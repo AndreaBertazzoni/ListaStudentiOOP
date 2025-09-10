@@ -39,4 +39,9 @@ class ReportGenerator{
         echo $this->htmlReportRenderer->renderStudentsCoursesReport($reportData);
     }
 
+    public function displayCourseDetails(Course $course): void 
+    {
+        $reportData = $this->reportService->collectCourseDetails($course);
+        echo $this->htmlReportRenderer->renderCourseDetails($reportData);
+    }
 }

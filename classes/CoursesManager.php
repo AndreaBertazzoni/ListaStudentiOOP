@@ -13,6 +13,7 @@ class CoursesManager
     {
         $this->courses = $courses;
         $this->students = $students;
+
     }
 
     public function addCourse(Course $course): void
@@ -55,9 +56,18 @@ class CoursesManager
         return $this->students;
     }
 
-    
-    
-    
+    public function setAttendances(): void 
+    {
+        foreach($this->students as $student){
+            foreach($student->getSubscriptions() as $course){
+                foreach($course->getLessons() as $lesson){
+                    if($student->getTpForLesson($lesson->getId())){
+                        $lesson->addAttendance();
+                    }
+                }
+            }
+        }
+    }   
    
     
 }

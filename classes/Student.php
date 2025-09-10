@@ -45,6 +45,7 @@ class Student
             }
         }
         $this->subscriptions[] = $course;
+        $course->addEnrolled();
     }
 
     public function subscribeToCourses(Course ...$courses): void
@@ -70,9 +71,14 @@ class Student
     }
 
     public function isSubscribedToCourse(int $courseID): bool
-    {
-        return in_array($courseID, $this->subscriptions);
+{
+    foreach ($this->subscriptions as $course) {
+        if ($course->getId() === $courseID) {
+            return true;
+        }
     }
+    return false;
+}
 
     public function getSubscriptionsInfo(): void
     {
@@ -152,6 +158,7 @@ class Student
         return $totalLessonDuration > 0 ?
             ($attendanceDuration / $totalLessonDuration) * 100 : 0.0;
     }
+    
 
     public function getAverageTpForCourse(int $courseId): float
     {
@@ -202,5 +209,4 @@ class Student
         }
         return false;
     }
-
 }

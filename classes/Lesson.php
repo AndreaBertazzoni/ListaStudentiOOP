@@ -11,6 +11,7 @@ class Lesson {
     private Carbon $startTime;
     private Carbon $endTime;
     private int $courseId;
+    private int $attendances;
 
     public function __construct(int $id, int $number, string $title, Carbon $date, Carbon $startTime, Carbon $endTime) 
     {
@@ -20,6 +21,7 @@ class Lesson {
         $this->date = $date;
         $this->startTime = $startTime;
         $this->endTime = $endTime;
+        $this->attendances = 0;
     }
 
     public function getId(): int {
@@ -48,5 +50,15 @@ class Lesson {
     
     public function setCourseId(int $courseId): void {
         $this->courseId = $courseId;
+    }
+
+    public function addAttendance(): void 
+    {   
+        $this->attendances ++;
+    }
+
+    public function getAttendances(): int 
+    {
+        return $this->attendances;
     }
 }

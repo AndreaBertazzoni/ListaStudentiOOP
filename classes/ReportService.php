@@ -5,6 +5,7 @@ class ReportService{
 
     public function __construct(CoursesManager $coursesManager){
         $this->coursesManager = $coursesManager;
+        $this->coursesManager->setAttendances();
     }
     
     public function collectStudentReportData(Student $student): array {
@@ -98,4 +99,36 @@ class ReportService{
         return $coursesReportData;
     }
     
+
+    public function collectCourseDetails(Course $course): array 
+    {
+        $courseDetails = [
+            "name" => $course->getName(),
+            "lessons" => [],
+            "enrolled" => $course->getEnrolled(),
+        ];
+        $lessons = $course->getLessons();
+        foreach($lessons as $lesson){
+            $lessonDetails = [
+                "lesson_name" => $lesson->getTitle(),
+                "lesson_date" => $lesson->getDate(),
+                "lesson_start" => $lesson->getStartTime(),
+                "lesson_end" => $lesson->getEndTime(),
+                "attendances" => $lesson->getAttendances(),
+                "absents" => ($course->getEnrolled() - $lesson->getAttendances()),
+                "lessons_tp" => [],
+            ];
+            $students = $this->coursesManager->getStudents();
+            foreach ($students as $student) {
+                if($student->isSubscribedToCourse($course->getId())){
+
+                    $lessonDetails["lessons_tp"][$student->getFullName()] = $student->getTpForLesson($lesson->getId());
+                }
+        }
+
+        $courseDetails["lessons"][] = $lessonDetails;
+        }
+
+        return $courseDetails;
+    }
 }

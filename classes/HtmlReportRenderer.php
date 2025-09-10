@@ -79,4 +79,22 @@ class HtmlReportRenderer
         }
         return $html;
     }
+
+    public function renderCourseDetails(array $courseDetails): string 
+    {
+        $html = "<strong>Titolo corso: " . $courseDetails["name"] . "</strong><br><br>";
+        foreach($courseDetails["lessons"] as $lesson){
+            $html .= "Titolo lezione: " . $lesson["lesson_name"] . "<br>";
+            $html .= "Data lezione: " . $lesson["lesson_date"] . "<br>";
+            $html .= "Orario di inizio/fine: " . $lesson["lesson_start"] . "/" . $lesson["lesson_end"] . "<br>";
+            $html .= "Studenti presenti: " . $lesson["attendances"] . "<br>";
+            $html .= "Studenti assenti: " . $lesson["absents"] . "<br>";
+            $html .= "Tasso di partecipazione studenti: <br>";
+            foreach($lesson["lessons_tp"] as $studentName => $tp){
+                $html .= $studentName . ": " . $tp . "%<br>";
+            }
+            $html .= "<br>";
+        }
+        return $html;
+    }
 }

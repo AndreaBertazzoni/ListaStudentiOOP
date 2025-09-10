@@ -364,3 +364,4 @@ $reportGenerator = new ReportGenerator($courseManager);
 $reportGenerator->displayCoursesInfo($courseManager->getCourses());
 $reportGenerator->displayStudentsInfo($courseManager->getStudents());
 $reportGenerator->displayStudentsCoursesInfo($courseManager->getStudents());
+$reportGenerator->displayCourseDetails($course101);
