@@ -106,6 +106,7 @@ class ReportService{
             "name" => $course->getName(),
             "lessons" => [],
             "enrolled" => $course->getEnrolled(),
+            "average_tp" => $this->coursesManager->getCourseOverallTp($course, $this->coursesManager->getStudents()),
         ];
         $lessons = $course->getLessons();
         foreach($lessons as $lesson){
@@ -130,5 +131,14 @@ class ReportService{
         }
 
         return $courseDetails;
+    }
+
+    public function collectCoursesDetails(array $courses): array 
+    {
+        $coursesDetailsData = [];
+        foreach($courses as $course){
+            $coursesDetailsData[] = $this->collectCourseDetails($course);
+        }
+        return $coursesDetailsData;
     }
 }

@@ -44,4 +44,10 @@ class ReportGenerator{
         $reportData = $this->reportService->collectCourseDetails($course);
         echo $this->htmlReportRenderer->renderCourseDetails($reportData);
     }
+
+    public function displayCoursesDetails(array $courses): void
+    {
+        $reportData = $this->reportService->collectCoursesDetails($courses);
+        echo $this->htmlReportRenderer->renderCoursesDetails($reportData);
+    }
 }

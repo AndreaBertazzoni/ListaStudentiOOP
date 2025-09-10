@@ -52,17 +52,19 @@ class HtmlReportRenderer
         return $html . "<hr>";
     }
 
-    public function renderStudents(array $studentsData): string {
+    public function renderStudents(array $studentsData): string
+    {
         $html = "";
-        foreach($studentsData as $studentData){
+        foreach ($studentsData as $studentData) {
             $html .= $this->renderStudent($studentData);
         }
         return $html;
     }
 
-    public function renderStudentCourseReport(array $studentCourseData): string {
+    public function renderStudentCourseReport(array $studentCourseData): string
+    {
         $html = "<p style='font-size: 120%;'><strong>Studente: " . $studentCourseData["student_name"] . "</strong></p>";
-        foreach($studentCourseData["courses"] as $course){
+        foreach ($studentCourseData["courses"] as $course) {
             $html .= "<strong>Titolo corso: " . $course["course_name"] . "</strong><br>";
             $html .= "Numero lezioni :" . $course["lesson_number"] . "<br>";
             $html .= "Presente a tutte le lezioni: " . ($course["always_present"] ? "Si" : "No") . "<br>";
@@ -72,28 +74,40 @@ class HtmlReportRenderer
         return $html;
     }
 
-    public function renderStudentsCoursesReport(array $studentsCoursesData): string {
+    public function renderStudentsCoursesReport(array $studentsCoursesData): string
+    {
         $html = "";
-        foreach($studentsCoursesData as $studentCourseData){
+        foreach ($studentsCoursesData as $studentCourseData) {
             $html .= $this->renderStudentCourseReport($studentCourseData);
         }
         return $html;
     }
 
-    public function renderCourseDetails(array $courseDetails): string 
+    public function renderCourseDetails(array $courseDetails): string
     {
-        $html = "<strong>Titolo corso: " . $courseDetails["name"] . "</strong><br><br>";
-        foreach($courseDetails["lessons"] as $lesson){
-            $html .= "Titolo lezione: " . $lesson["lesson_name"] . "<br>";
+        $html = "<strong>Titolo corso: " . $courseDetails["name"] . "</strong><br>";
+        $html .= "Numero studenti iscritti: " . $courseDetails["enrolled"] . "<br><br>";
+        foreach ($courseDetails["lessons"] as $lesson) {
+            $html .= "Titolo lezione: " . $lesson["lesson_name"] . "<br><br>";
             $html .= "Data lezione: " . $lesson["lesson_date"] . "<br>";
             $html .= "Orario di inizio/fine: " . $lesson["lesson_start"] . "/" . $lesson["lesson_end"] . "<br>";
             $html .= "Studenti presenti: " . $lesson["attendances"] . "<br>";
             $html .= "Studenti assenti: " . $lesson["absents"] . "<br>";
             $html .= "Tasso di partecipazione studenti: <br>";
-            foreach($lesson["lessons_tp"] as $studentName => $tp){
+            foreach ($lesson["lessons_tp"] as $studentName => $tp) {
                 $html .= $studentName . ": " . $tp . "%<br>";
             }
             $html .= "<br>";
+        }
+        $html .= "Tasso di partecipazione medio corso: " . $courseDetails["average_tp"] . "%<hr>";
+        return $html;
+    }
+
+    public function renderCoursesDetails(array $coursesDetails): string
+    {
+        $html = "";
+        foreach ($coursesDetails as $courseDetails) {
+            $html .= $this->renderCourseDetails($courseDetails);
         }
         return $html;
     }

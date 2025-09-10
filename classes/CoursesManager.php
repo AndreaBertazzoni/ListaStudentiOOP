@@ -13,7 +13,6 @@ class CoursesManager
     {
         $this->courses = $courses;
         $this->students = $students;
-
     }
 
     public function addCourse(Course $course): void
@@ -26,13 +25,15 @@ class CoursesManager
         $this->courses[] = $course;
     }
 
-    public function getCourses(): array{
+    public function getCourses(): array
+    {
         return $this->courses;
     }
 
-    public function addCourses(Course ...$courses){
-        foreach($courses as $course){
-            $this->addCourse($course); 
+    public function addCourses(Course ...$courses)
+    {
+        foreach ($courses as $course) {
+            $this->addCourse($course);
         }
     }
 
@@ -46,28 +47,47 @@ class CoursesManager
         $this->students[] = $student;
     }
 
-    public function addStudents(Student ...$students){
-        foreach($students as $student){
+    public function addStudents(Student ...$students)
+    {
+        foreach ($students as $student) {
             $this->addStudent($student);
         }
     }
 
-    public function getStudents(): array {
+    public function getStudents(): array
+    {
         return $this->students;
     }
 
-    public function setAttendances(): void 
+    public function setAttendances(): void
     {
-        foreach($this->students as $student){
-            foreach($student->getSubscriptions() as $course){
-                foreach($course->getLessons() as $lesson){
-                    if($student->getTpForLesson($lesson->getId())){
+        foreach ($this->students as $student) {
+            foreach ($student->getSubscriptions() as $course) {
+                foreach ($course->getLessons() as $lesson) {
+                    if ($student->getTpForLesson($lesson->getId())) {
                         $lesson->addAttendance();
                     }
                 }
             }
         }
-    }   
-   
-    
+    }
+
+    public function getCourseOverallTp(Course $course, array $students): float
+    {
+        $overallTp = 0.0;
+        $enrolledCount = 0;
+
+        foreach ($students as $student) {
+            if ($student->isSubscribedToCourse($course->getId())) {
+                $overallTp += $student->getAverageTpForCourse($course->getId());
+                $enrolledCount++;
+            }
+        }
+
+        if ($enrolledCount === 0) {
+            return 0.0;
+        }
+
+        return round($overallTp / $enrolledCount, 1);
+    }
 }
