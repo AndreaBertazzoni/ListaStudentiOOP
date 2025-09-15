@@ -5,8 +5,9 @@ class HtmlReportRenderer
     private $dateFormat = "d/m/Y";
     private $timeFormat = "H:i";
     private $dateTimeFormat = "d/m/Y H:i";
+    private $percFormat = [1, ","];
 
-    public function __construct($dateFormat = null, $timeFormat = null, $dateTimeFormat = null)
+    public function __construct($dateFormat = null, $timeFormat = null, $dateTimeFormat = null, $percFormat = null)
     {
         if ($dateFormat !== null) {
             $this->dateFormat = $dateFormat;
@@ -17,6 +18,17 @@ class HtmlReportRenderer
         if ($dateTimeFormat !== null) {
             $this->dateTimeFormat = $dateTimeFormat;
         }
+        if ($percFormat !== null) {
+            $this->percFormat = $percFormat;
+        }
+    }
+
+    private function formatPercentage(float $percentage)
+    {
+        if ($percentage <= 0 || $percentage >= 100) {
+            return number_format($percentage, 0, $this->percFormat[1]);
+        }
+        return number_format($percentage, $this->percFormat[0], $this->percFormat[1]);
     }
 
     private function formatDate($date)
@@ -52,7 +64,7 @@ class HtmlReportRenderer
         $html .= "Orario di uscita: " . $this->formatTime($lessonData["end_time"]) . "<br>";
         $html .= "Entrata studente: " . ($lessonData["student_entry"] ? $this->formatTime($lessonData["student_entry"]) : "assente") . "<br>";
         $html .= "Uscita studente: " . ($lessonData["student_exit"] ? $this->formatTime($lessonData["student_exit"]) : "assente") . "<br>";
-        $html .= "Tasso di partecipazione: " . number_format($lessonData["student_tp"], 1, ",") . "%<br>";
+        $html .= "Tasso di partecipazione: " . $this->formatPercentage($lessonData["student_tp"]) . "%<br>";
         $html .= "<br>";
 
         return $html;
@@ -86,7 +98,7 @@ class HtmlReportRenderer
             foreach ($course["lessons"] as $lesson) {
                 $html .= $this->renderLesson($lesson);
             }
-            $html .= "<p><strong>Tasso di partecipazione medio: " . number_format($course["average_tp"], 1, ",") . "%</strong></p><br>";
+            $html .= "<p><strong>Tasso di partecipazione medio: " . $this->formatPercentage($course["average_tp"]) . "%</strong></p><br>";
         }
         return $html . "<hr>";
     }
@@ -107,9 +119,9 @@ class HtmlReportRenderer
             $html .= "<strong>Titolo corso: " . htmlspecialchars($course["course_name"]) . "</strong><br>";
             $html .= "Numero lezioni :" . htmlspecialchars($course["lesson_number"]) . "<br>";
             $html .= "Presente a tutte le lezioni: " . ($course["always_present"] ? "Si" : "No") . "<br>";
-            $html .= "Tasso di partecipazione medio al corso: " . number_format($course["course_tp"], 1, ",") . "%<br><br>";
+            $html .= "Tasso di partecipazione medio al corso: " . $this->formatPercentage($course["course_tp"]) . "%<br><br>";
         }
-        $html .= "<strong>Tasso di partecipazione totale: " . number_format($studentCourseData["average_tp"], 1, ",") . "%</strong><hr>";
+        $html .= "<strong>Tasso di partecipazione totale: " . $this->formatPercentage($studentCourseData["average_tp"]) . "%</strong><hr>";
         return $html;
     }
 
@@ -124,39 +136,39 @@ class HtmlReportRenderer
 
     public function renderCourseDetails(array $courseDetails): string
     {
-        $html = "<strong>Titolo corso: " . htmlspecialchars($courseDetails["name"]) . "</strong><br>";
-        $html .= "Numero studenti iscritti: " . htmlspecialchars($courseDetails["enrolled"]) . "<br><br>";
+        $html = "<p style='font-size: 120%;'><strong>Titolo corso: " . htmlspecialchars($courseDetails["name"]) . "</p>";
+        $html .= "Numero studenti iscritti: " . htmlspecialchars($courseDetails["enrolled"]) . "</strong><br><br>";
         foreach ($courseDetails["lessons"] as $lesson) {
-            $html .= "Titolo lezione: " . htmlspecialchars($lesson["lesson_name"]) . "<br><br>";
+            $html .= "<strong>Titolo lezione: " . htmlspecialchars($lesson["lesson_name"]) . "</strong><br><br>";
             $html .= "Data lezione: " . $this->formatDate($lesson["lesson_date"]) . "<br>";
             $html .= "Orario di inizio/fine: " . $this->formatTime($lesson["lesson_start"]) . "/" . $this->formatTime($lesson["lesson_end"]) . "<br>";
             $html .= "Studenti presenti: " . htmlspecialchars($lesson["attendances"]) . "<br>";
             $html .= "Studenti assenti: " . htmlspecialchars($lesson["absents"]) . "<br>";
             $html .= "Tasso di partecipazione studenti: <br>";
             foreach ($lesson["lessons_tp"] as $studentName => $tp) {
-                $html .= htmlspecialchars($studentName) . ": " . htmlspecialchars($tp) . "%<br>";
+                $html .= htmlspecialchars($studentName) . ": " . $this->formatPercentage(htmlspecialchars($tp)) . "%<br>";
             }
             $html .= "<br>";
         }
-        $html .= "Tasso di partecipazione medio corso: " . htmlspecialchars($courseDetails["average_tp"]) . "%<br>";
-        $html .= "Classificazione tasso di partecipazione: " . htmlspecialchars($courseDetails["tp_status"]) . "<br><br>";
-        $html .= "Studenti con più presenze: <br>";
+        $html .= "<strong>Tasso di partecipazione medio corso: " . $this->formatPercentage(htmlspecialchars($courseDetails["average_tp"])) . "%<br><br>";
+        $html .= "Classificazione tasso di partecipazione: " . htmlspecialchars($courseDetails["tp_status"]) . "</strong><br><br>";
+        $html .= "<strong>Studenti con più presenze: </strong><br>";
         $mostAttStud = $courseDetails["most_attended_students"];
-        foreach($mostAttStud as $student){
+        foreach ($mostAttStud as $student) {
             $html .= $student->getFullName() . "<br>";
         }
         $html .= "<br>";
-        $html .= "Giorni con più presenze: <br><br>";
+        $html .= "<strong>Giorni con più presenze: </strong><br>";
         $mostAttDays = $courseDetails["most_attended_days"];
         $data_num = 1;
-        foreach($mostAttDays as $lesson){
-            $lessonDate = $lesson->getDate();            
+        foreach ($mostAttDays as $lesson) {
+            $lessonDate = $lesson->getDate();
             $html .= "- Data {$data_num}: " . $this->formatDate($lessonDate) . "<br>";
             $data_num++;
         }
         $html .= "<br>";
-        $html .= "Totale presenze: " . $courseDetails["total_attendances"] . "<br>";
-        $html .= "<br><hr><br>";
+        $html .= "<strong>Totale presenze: " . $courseDetails["total_attendances"] . "</strong><br>";
+        $html .= "<br><hr>";
         return $html;
     }
 
