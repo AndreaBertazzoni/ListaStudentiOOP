@@ -92,6 +92,27 @@ class Student
         $this->attendances[] = $attendance;
     }
 
+    public function getAttendancesNumber(): int 
+    {
+        $attendancesNumber = count($this->attendances);
+        return $attendancesNumber;
+    }
+
+    public function getCourseAttendances(Course $course): int 
+    {
+        $result = 0;
+        $lessons = $course->getLessons();
+        $attendances = $this->attendances;
+        foreach($lessons as $lesson){
+            foreach($attendances as $attendance){
+                if($attendance->getLessonId() === $lesson->getId()){
+                    $result ++;
+                }
+            }
+        }
+        return $result;
+    }
+
     public function getAttendanceEntryTime($lessonId): ?Carbon{
         foreach($this->attendances as $attendance){
             if($attendance->getLessonId() === $lessonId){
@@ -156,7 +177,7 @@ class Student
         $attendanceDuration = $effectiveStart->diffInMinutes($effectiveEnd);
 
         return $totalLessonDuration > 0 ?
-            ($attendanceDuration / $totalLessonDuration) * 100 : 0.0;
+            round(($attendanceDuration / $totalLessonDuration) * 100, 1) : 0.0;
     }
     
 

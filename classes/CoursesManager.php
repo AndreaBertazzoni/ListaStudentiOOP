@@ -72,6 +72,37 @@ class CoursesManager
         }
     }
 
+    public function getCourseMaxAttendeces(Course $course, array $students): int
+    {
+        $maxAttendances = 0;
+
+        foreach ($students as $student) {
+            if ($student->isSubscribedToCourse($course->getId())) {
+                $maxPossibleAttendances = $student->getCourseAttendances($course);
+                if ($maxPossibleAttendances > $maxAttendances) {
+                    $maxAttendances = $maxPossibleAttendances;
+                }
+            }
+        }
+        return $maxAttendances;
+    }
+
+    public function getCourseMostAttendedStudent(Course $course, array $students): array
+    {
+        $result = [];
+        $maxAttendances = $this->getCourseMaxAttendeces($course, $students);
+
+        foreach ($students as $student) {
+            if ($student->isSubscribedToCourse($course->getId())) {
+                $attendances = $student->getCourseAttendances($course);
+                if ($attendances >= $maxAttendances) {
+                    $result[] = $student;
+                }
+            }
+        }
+        return $result;
+    }
+
     public function getCourseOverallTp(Course $course, array $students): float
     {
         $overallTp = 0.0;

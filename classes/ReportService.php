@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 class ReportService{
     private CoursesManager $coursesManager;
 
@@ -30,11 +32,11 @@ class ReportService{
                 $courseData["lessons"][] = [
                     "number" => $lesson->getNumber(),
                     "title" => $lesson->getTitle(),
-                    "date" => $lesson->getDate()->format("d/m/Y"),
-                    "start_time" => $lesson->getStartTime()->format("H:i"),
-                    "end_time" => $lesson->getEndTime()->format("H:i"),
-                    "student_entry" => $studentEntry ? $studentEntry->format("H:i") : null,
-                    "student_exit" => $studentExit ? $studentExit->format("H:i") : null,
+                    "date" => $lesson->getDate(),
+                    "start_time" => $lesson->getStartTime(),
+                    "end_time" => $lesson->getEndTime(),
+                    "student_entry" => $studentEntry ? $studentEntry : null,
+                    "student_exit" => $studentExit ? $studentExit : null,
                     "student_tp" => round($student->getTpForLesson($lesson->getId()), 1)
                 ];
             }
@@ -84,9 +86,9 @@ class ReportService{
     public function collectCourseReportData(Course $course): array {
         $courseReportData = [
             "name" => $course->getName(),
-            "start_date" => $course->getStartDate()->format("d/m/Y"),
-            "end_date" => $course->getEndDate()->format("d/m/Y"),
-            "status" => $course->getStatus()
+            "start_date" => $course->getStartDate(),
+            "end_date" => $course->getEndDate(),
+            "status" => $this->getStatus($course),
         ];
         return $courseReportData;
     }  
@@ -107,6 +109,7 @@ class ReportService{
             "lessons" => [],
             "enrolled" => $course->getEnrolled(),
             "average_tp" => $this->coursesManager->getCourseOverallTp($course, $this->coursesManager->getStudents()),
+            "most_attended_students" => $this->coursesManager->getCourseMostAttendedStudent($course, $this->coursesManager->getStudents())
         ];
         $lessons = $course->getLessons();
         foreach($lessons as $lesson){
@@ -140,5 +143,20 @@ class ReportService{
             $coursesDetailsData[] = $this->collectCourseDetails($course);
         }
         return $coursesDetailsData;
+    }
+
+       public function getStatus(Course $course): string
+    {
+        $now = Carbon::now();
+        $startDate = $course->getStartDate();
+        $endDate = $course->getEndDate();
+
+        if($now->lt($startDate)){
+            return "In attesa di inizio";
+        }elseif($now->gt($endDate)){
+            return "Concluso";
+        }else {
+            return "In corso"; 
+        }
     }
 }
