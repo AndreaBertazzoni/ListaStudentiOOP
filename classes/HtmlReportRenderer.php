@@ -138,12 +138,24 @@ class HtmlReportRenderer
             }
             $html .= "<br>";
         }
-        $html .= "Tasso di partecipazione medio corso: " . htmlspecialchars($courseDetails["average_tp"]) . "%<br><br>";
+        $html .= "Tasso di partecipazione medio corso: " . htmlspecialchars($courseDetails["average_tp"]) . "%<br>";
+        $html .= "Classificazione tasso di partecipazione: " . htmlspecialchars($courseDetails["tp_status"]) . "<br><br>";
         $html .= "Studenti con più presenze: <br>";
         $mostAttStud = $courseDetails["most_attended_students"];
         foreach($mostAttStud as $student){
             $html .= $student->getFullName() . "<br>";
         }
+        $html .= "<br>";
+        $html .= "Giorni con più presenze: <br><br>";
+        $mostAttDays = $courseDetails["most_attended_days"];
+        $data_num = 1;
+        foreach($mostAttDays as $lesson){
+            $lessonDate = $lesson->getDate();            
+            $html .= "- Data {$data_num}: " . $this->formatDate($lessonDate) . "<br>";
+            $data_num++;
+        }
+        $html .= "<br>";
+        $html .= "Totale presenze: " . $courseDetails["total_attendances"] . "<br>";
         $html .= "<br><hr><br>";
         return $html;
     }

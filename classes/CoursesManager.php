@@ -72,6 +72,16 @@ class CoursesManager
         }
     }
 
+    public function getCourseTotalAttendances(Course $course): int
+    {
+        $result = 0;
+        $lessons = $course->getLessons();
+        foreach ($lessons as $lesson) {
+            $result += $lesson->getAttendances();
+        }
+        return $result;
+    }
+
     public function getCourseMaxAttendeces(Course $course, array $students): int
     {
         $maxAttendances = 0;
@@ -98,6 +108,34 @@ class CoursesManager
                 if ($attendances >= $maxAttendances) {
                     $result[] = $student;
                 }
+            }
+        }
+        return $result;
+    }
+
+    public function getLessonsMaxAttendaces(Course $course): int
+    {
+        $maxAttendances = 0;
+        $lessons = $course->getLessons();
+        foreach ($lessons as $lesson) {
+            $maxPossibleAttendances = $lesson->getAttendances();
+            if ($maxPossibleAttendances > $maxAttendances) {
+                $maxAttendances = $maxPossibleAttendances;
+            }
+        }
+
+        return $maxAttendances;
+    }
+
+    public function getMostAttendedLessons(Course $course): array
+    {
+        $maxAttendances = $this->getLessonsMaxAttendaces($course);
+        $result = [];
+
+        $lessons = $course->getLessons();
+        foreach ($lessons as $lesson) {
+            if ($lesson->getAttendances() === $maxAttendances) {
+                $result[] = $lesson;
             }
         }
         return $result;
