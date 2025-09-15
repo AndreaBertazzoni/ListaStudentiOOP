@@ -181,18 +181,4 @@ class HtmlReportRenderer
         return $html;
     }
 
-    public function setDateFormat($format)
-    {
-        $this->dateFormat = $format;
-    }
-
-    public function setTimeFormat($format)
-    {
-        $this->timeFormat = $format;
-    }
-
-    public function setDateTimeFormat($format)
-    {
-        $this->dateTimeFormat = $format;
-    }
 }
